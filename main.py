@@ -177,10 +177,12 @@ class Bot(commands.Bot):
         result = list(range(130, 160)) + list(range(160, 180)) * 5 + list(range(180, 210))
         random.seed(ctx.author.id * 4)
         height = random.choice(result)
+        random.seed()
         if ctx.author.is_broadcaster:
             await ctx.send(f'@{ctx.author.name}, твой рост - 148 см')
         else:
             await ctx.send(f'@{ctx.author.name}, твой рост - {height} см')
+
 
     @commands.command(name='uptime')
     async def uptime(self, ctx: commands.Context):
