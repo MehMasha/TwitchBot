@@ -22,7 +22,7 @@
 # p(12345)
 
 # def sum_f():
-#     global a 
+#     global a
 #     a = 100
 
 # sum_f()
@@ -49,4 +49,4 @@
 # asyncio.run(twitch_example())
 
 
-print(hash('mehmasha'))
+print(hash("mehmasha"))
