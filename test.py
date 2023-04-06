@@ -49,4 +49,29 @@
 # asyncio.run(twitch_example())
 
 
-print(hash("mehmasha"))
+# print(hash("mehmasha"))
+import pymongo
+
+client = pymongo.MongoClient('mongodb://root:your_password@localhost:27017/')
+
+db = client['twitch_bot']
+
+collection = db['users']
+
+# Добавление документа в коллекцию
+new_document = {
+    "name": "username2",
+    "wins": 1,
+}
+collection.insert_one(new_document) 
+new_document = {
+    "name": "username1",
+    "wins": 1,
+}
+collection.insert_one(new_document)
+
+# Чтение всех документов из коллекции
+documents = collection.find()
+
+for document in documents:
+    print(document)
