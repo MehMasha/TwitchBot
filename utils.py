@@ -31,6 +31,6 @@ def get_commands() -> str:
     res_str += "!discord - дискорд, "
     res_str += "!boosty - эксклюзивный контент, "
     res_str += "!db - ссылка на мою айти историю, "
-    res_str += "!рост - узнать рост стримера"
+    res_str += "!рост - узнать рост стримера, "
     res_str += "!python - мой гайд Python"
     return res_str
