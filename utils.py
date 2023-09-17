@@ -26,12 +26,10 @@ def get_followage(followed_at, ctx, morph) -> str:
 def get_commands() -> str:
     res_str = "Команды: "
     res_str += "!followage - посмотреть сколько зафоловлен, "
-    res_str += "!donate - ссылка на донат, "
-    res_str += "!tg - ссылка на телеграм, "
-    res_str += "!discord - ссылка на дискорд, "
-    res_str += "!boosty - ссылка на бусти, "
+    res_str += "!donate - донат, "
+    res_str += "!tg - телеграм, "
+    res_str += "!discord - дискорд, "
+    res_str += "!boosty - эксклюзивный контент, "
     res_str += "!db - ссылка на мою айти историю, "
-    res_str += "!рост - узнать свой рост, "
-    res_str += "!мойрост - узнать мой рост, "
-    res_str += "!член - узнать размер члена "
+    res_str += "!рост - узнать рост стримера"
     return res_str

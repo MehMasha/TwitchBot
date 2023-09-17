@@ -11,6 +11,7 @@ from twitchio.ext import routines
 import random
 import time
 import json
+import pymongo
 
 from utils import get_followage, get_commands
 
@@ -38,8 +39,7 @@ class Bot(commands.Bot):
         super().__init__(token=token, prefix="!", initial_channels=["mehmasha"])
         self.game_active = False
         self.players = {}
-        with open("data/people.json", "r") as file:
-            self.chat_people = json.load(file)
+        # self.client = pymongo.MongoClient('mongodb://root:your_password@localhost:27017/')
 
     async def event_ready(self):
         print(f"Logged in as | {self.nick}")
@@ -57,9 +57,8 @@ class Bot(commands.Bot):
         user = message.author
         me = await message.channel.user()
         k = await me.fetch_followers(token)
-        self.chat_people[user.name] = self.chat_people.get(user.name, 0) + 1
 
-        if "несостоявш" in message.content.lower():
+        if "несостоявш" in message.content.lower() or "не состоявш" in message.content.lower():
             await message.channel.send(
                 f"Привет, @{message.author.name}! Если ты хочешь узнать подробную историю про мои страдания на работах в IT, то воспользуйся командой !db"
             )
@@ -119,23 +118,28 @@ class Bot(commands.Bot):
 
     @commands.command(name="db", aliases=["bd", "начальник", "DB", "Db", "Bd", "BD"])
     async def db(self, ctx: commands.Context):
-        await ctx.send("https://youtu.be/SJCaExarFiQ")
+        # await ctx.send("https://youtu.be/SJCaExarFiQ")
+        await ctx.send(f"@{ctx.author.name}, - https://youtu.be/SJCaExarFiQ")
 
-    @commands.command(name="tg", aliases=["telegram", "TG", "Tg", "телеграмм", "телега"])
+    @commands.command(name="tg", aliases=["telegram", "TG", "Tg", "телеграмм", "телега", "тг"])
     async def tg(self, ctx: commands.Context):
-        await ctx.send("https://t.me/mehmasha_twitch")
+        # await ctx.send("https://t.me/mehmasha_twitch")
+        await ctx.send(f"@{ctx.author.name}, Алерты и кружочки - https://t.me/MehMashaAlerts Чатик - https://t.me/mehmasha_twitch")
 
     @commands.command(name="boosty")
     async def boosty(self, ctx: commands.Context):
-        await ctx.send("https://boosty.to/mehmasha")
+        # await ctx.send("https://boosty.to/mehmasha")
+        await ctx.send(f"@{ctx.author.name}, - https://boosty.to/mehmasha")
 
     @commands.command(name="discord")
     async def discord(self, ctx: commands.Context):
-        await ctx.send("https://discord.gg/SG3qgBtAyh")
+        # await ctx.send("https://discord.gg/SG3qgBtAyh")
+        await ctx.send(f"@{ctx.author.name}, - https://discord.gg/SG3qgBtAyh")
 
     @commands.command(name="donate", aliases=["донат", "Donate", "Донат"])
     async def donate(self, ctx: commands.Context):
-        await ctx.send("https://www.donationalerts.com/r/mehmasha")
+        # await ctx.send("https://www.donationalerts.com/r/mehmasha")
+        await ctx.send(f"@{ctx.author.name}, - https://www.donationalerts.com/r/mehmasha")
 
     @commands.command(name="followage")
     async def followage(self, ctx: commands.Context):
@@ -153,44 +157,47 @@ class Bot(commands.Bot):
     @commands.command(name="commands")
     async def command(self, ctx: commands.Context):
         res_str = get_commands()
-        await ctx.send(res_str)
-
-    @commands.command(name="мойрост", aliases=["myheight"])
-    async def height(self, ctx: commands.Context):
-        res_str = "Мой рост 148см. Хочешь узнать свой? Запускай команду !рост"
-        await ctx.send(res_str)
+        await ctx.send(f"@{ctx.author.name}, - {res_str}")
 
     @commands.command(name="рост", aliases=["height"])
-    async def your_heights(self, ctx: commands.Context):
-        result = (
-            list(range(130, 160)) + list(range(160, 180)) * 5 + list(range(180, 210))
-        )
-        random.seed(ctx.author.id * 4)
-        height = random.choice(result)
-        random.seed()
-        if ctx.author.is_broadcaster:
-            await ctx.send(f"@{ctx.author.name}, твой рост - 148 см")
-        else:
-            await ctx.send(f"@{ctx.author.name}, твой рост - {height} см")
+    async def height(self, ctx: commands.Context):
+        res_str = "Мой рост 148см."
+        # await ctx.send(res_str)
+        await ctx.send(f"@{ctx.author.name}, - {res_str}")
 
-    @commands.command(name="член", aliases=["length", 'Член', 'писюн'])
-    async def your_dick(self, ctx: commands.Context):
-        random.seed(2 * int(ctx.author.id) - datetime.now().day)
-        if ctx.author.is_broadcaster or ctx.author.name.lower() == 'margot_tenebrae':
-            await ctx.send(f"@{ctx.author.name}, у тебя нет члена!")
-        elif ctx.author.is_mod or ctx.author.is_vip or ctx.author.is_subscriber:
-            result1 = (
-                list(range(13, 15)) * 3 +  list(range(15, 20)) * 2 +  list(range(20, 30))
-            )
-            height = random.choice(result1)
-            await ctx.send(f"@{ctx.author.name}, длина твоего члена - {height} см")
-        else:
-            result1 = (
-                list(range(-3, 5)) + list(range(5, 10)) * 4 + list(range(10, 15)) * 6 +  list(range(15, 20)) * 2 +  list(range(20, 30))
-            )
-            height = random.choice(result1)
-            await ctx.send(f"@{ctx.author.name}, длина твоего члена - {height} см")
-        random.seed()
+    # @commands.command(name="рост", aliases=["height"])
+    # async def your_heights(self, ctx: commands.Context):
+    #     result = (
+    #         list(range(140, 160)) + list(range(160, 180)) * 5 + list(range(180, 210))
+    #     )
+    #     random.seed(int(ctx.author.id) * 4 - datetime.now().day)
+    #     height = random.choice(result)
+    #     random.seed()
+    #     if ctx.author.is_broadcaster:
+    #         await ctx.send(f"@{ctx.author.name}, твой рост - 148 см")
+    #     else:
+    #         await ctx.send(f"@{ctx.author.name}, твой рост - {height} см")
+
+    # @commands.command(name="член", aliases=["length", 'Член', 'писюн'])
+    # async def your_dick(self, ctx: commands.Context):
+    #     random.seed(2 * int(ctx.author.id) - datetime.now().day)
+    #     if ctx.author.is_broadcaster:
+    #         await ctx.send(f"@{ctx.author.name}, у тебя нет члена!")
+    #     elif ctx.author.name.lower() == 'margot_tenebrae':
+    #         await ctx.send(f"@{ctx.author.name}, члена нет, но есть яйца!")
+    #     elif ctx.author.is_mod or ctx.author.is_vip or ctx.author.is_subscriber:
+    #         result1 = (
+    #             list(range(13, 15)) * 3 +  list(range(15, 20)) * 2 +  list(range(20, 30))
+    #         )
+    #         height = random.choice(result1)
+    #         await ctx.send(f"@{ctx.author.name}, длина твоего члена - {height} см")
+    #     else:
+    #         result1 = (
+    #             list(range(-3, 5)) + list(range(5, 10)) * 4 + list(range(10, 15)) * 6 +  list(range(15, 20)) * 2 +  list(range(20, 30))
+    #         )
+    #         height = random.choice(result1)
+    #         await ctx.send(f"@{ctx.author.name}, длина твоего члена - {height} см")
+    #     random.seed()
 
     @commands.command(name="uptime")
     async def uptime(self, ctx: commands.Context):
@@ -209,7 +216,8 @@ class Bot(commands.Bot):
                 word = morph.parse(key)[0]
                 word_skl = word.make_agree_with_number(value).word
                 res_str += f"{value} {word_skl} "
-        await ctx.send(res_str)
+        # await ctx.send(res_str)
+        await ctx.send(f"@{ctx.author.name}, - {res_str}")
 
     @commands.command(name="startguess")
     async def startguess(self, ctx):
@@ -282,7 +290,6 @@ class Bot(commands.Bot):
     async def pins(self, ctx):
         author = ctx.author.name
         await ctx.send(f"@{ctx.author.name}, (10, 12, 14, 15, 17, 18, 21, 24, 26, 13, 19, 16)")
-
 
 
     async def on_shutdown(self):
