@@ -13,15 +13,18 @@ import time
 import json
 import pymongo
 
+lang = 'en'
+
+if lang == 'ru':
+    from text_ru import *
+else:
+    from text_en import *
 
 from utils import get_followage, get_commands
-
-# logger.add(sys.stderr, format="{time} {level} {message}", filter="my_module", level="INFO")
 
 logger.add("main_log.log", rotation="50 MB")
 
 morph = pymorphy2.MorphAnalyzer(lang="ru")
-
 
 load_dotenv()
 token = os.getenv("ACCESS_TOKEN")
@@ -73,7 +76,7 @@ class Bot(commands.Bot):
 
         elif message.first:
             await message.channel.send(
-                f"@{message.author.name}, хэлоу! Добро пожаловать на мой стрим и в чат! Залетай в телегу и в дискорд! <3"
+                f"@{message.author.name}, {msg_first}"
             )
 
         await self.handle_commands(message)
@@ -99,7 +102,7 @@ class Bot(commands.Bot):
         is_live = await self.is_live()
         if is_live:
             try:
-                res_str = get_commands()
+                res_str = get_commands(lang)
                 channel = self.connected_channels[0]
                 await channel.send(res_str)
             except:
@@ -111,27 +114,33 @@ class Bot(commands.Bot):
         is_live = await self.is_live()
         if is_live:
             try:
-                res_str = "Заходи в телеграм или дискорд, там будут оповещения о начале стримов! А еще подписывайся на бусти TehePelo"
                 channel = self.connected_channels[0]
-                await channel.send(res_str)
+                await channel.send(routine_2)
             except:
                 print("Заебало")
 
     @commands.command(name="db", aliases=["bd", "начальник", "DB", "Db", "Bd", "BD"])
     async def db(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - https://youtu.be/SJCaExarFiQ")
+    @commands.command(name="огурец", aliases=["cucumber"])
+    async def cucumber(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, - Мой новый влог с Праздника Огурца на boosty - https://boosty.to/mehmasha/posts/97f101f5-72f5-45d0-875c-ec81d67a7445?share=post_link")
 
     @commands.command(name="python", aliases=["phyton", "питон", "пайтон"])
     async def python(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, мой гайд по питону - https://youtu.be/4z_nzaHgUhk")
+        await ctx.send(f"@{ctx.author.name}, {python_guide} - https://youtu.be/4z_nzaHgUhk")
 
     @commands.command(name="tg", aliases=["telegram", "TG", "Tg", "телеграмм", "телега", "тг"])
     async def tg(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, Алерты и кружочки - https://t.me/MehMashaAlerts Чатик - https://t.me/mehmasha_twitch")
+        await ctx.send(f"@{ctx.author.name}, {tg_msg}")
 
     @commands.command(name="boosty")
     async def boosty(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - https://boosty.to/mehmasha")
+
+    @commands.command(name="games")
+    async def games(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, - https://pastebin.com/LKFCNkKz")
 
     @commands.command(name="discord")
     async def discord(self, ctx: commands.Context):
@@ -148,56 +157,20 @@ class Bot(commands.Bot):
         k = await user.fetch_follow(me, token)
         logger.info(f"{user.name} вызвал команду followage")
         if k:
-            res_str = get_followage(k.followed_at, ctx, morph)
+            res_str = get_followage(k.followed_at, ctx, morph, lang)
             await ctx.send(res_str)
         else:
-            res_str = f"@{ctx.author.name}, а ты еще не зафоловился... BibleThump"
+            res_str = f"@{ctx.author.name}, {followage_msg}"
             await ctx.send(res_str)
 
     @commands.command(name="commands")
     async def command(self, ctx: commands.Context):
-        res_str = get_commands()
+        res_str = get_commands(lang)
         await ctx.send(f"@{ctx.author.name}, - {res_str}")
 
     @commands.command(name="рост", aliases=["height"])
     async def height(self, ctx: commands.Context):
-        res_str = "Мой рост 148см."
-        # await ctx.send(res_str)
-        await ctx.send(f"@{ctx.author.name}, - {res_str}")
-
-    # @commands.command(name="рост", aliases=["height"])
-    # async def your_heights(self, ctx: commands.Context):
-    #     result = (
-    #         list(range(140, 160)) + list(range(160, 180)) * 5 + list(range(180, 210))
-    #     )
-    #     random.seed(int(ctx.author.id) * 4 - datetime.now().day)
-    #     height = random.choice(result)
-    #     random.seed()
-    #     if ctx.author.is_broadcaster:
-    #         await ctx.send(f"@{ctx.author.name}, твой рост - 148 см")
-    #     else:
-    #         await ctx.send(f"@{ctx.author.name}, твой рост - {height} см")
-
-    # @commands.command(name="член", aliases=["length", 'Член', 'писюн'])
-    # async def your_dick(self, ctx: commands.Context):
-    #     random.seed(2 * int(ctx.author.id) - datetime.now().day)
-    #     if ctx.author.is_broadcaster:
-    #         await ctx.send(f"@{ctx.author.name}, у тебя нет члена!")
-    #     elif ctx.author.name.lower() == 'margot_tenebrae':
-    #         await ctx.send(f"@{ctx.author.name}, члена нет, но есть яйца!")
-    #     elif ctx.author.is_mod or ctx.author.is_vip or ctx.author.is_subscriber:
-    #         result1 = (
-    #             list(range(13, 15)) * 3 +  list(range(15, 20)) * 2 +  list(range(20, 30))
-    #         )
-    #         height = random.choice(result1)
-    #         await ctx.send(f"@{ctx.author.name}, длина твоего члена - {height} см")
-    #     else:
-    #         result1 = (
-    #             list(range(-3, 5)) + list(range(5, 10)) * 4 + list(range(10, 15)) * 6 +  list(range(15, 20)) * 2 +  list(range(20, 30))
-    #         )
-    #         height = random.choice(result1)
-    #         await ctx.send(f"@{ctx.author.name}, длина твоего члена - {height} см")
-    #     random.seed()
+        await ctx.send(f"@{ctx.author.name}, - {height_msg}")
 
     @commands.command(name="uptime")
     async def uptime(self, ctx: commands.Context):
@@ -218,52 +191,6 @@ class Bot(commands.Bot):
                 res_str += f"{value} {word_skl} "
         # await ctx.send(res_str)
         await ctx.send(f"@{ctx.author.name}, - {res_str}")
-
-    @commands.command(name="startguess")
-    async def startguess(self, ctx):
-        if self.game_active:
-            await ctx.send("Игра уже активна. Угадайте число!")
-        else:
-            if ctx.author.is_broadcaster or ctx.author.is_mod:
-                self.target_number = random.randint(1, 500)
-                self.game_active = True
-                await ctx.send(
-                    "Игра началась! Угадайте число от 1 до 500. Используйте !guess [число] для угадывания."
-                )
-            else:
-                await ctx.send("Только модератор или стример может запустить игру!")
-
-    @commands.command(name="guess")
-    async def guess(self, ctx, number: int):
-        if not self.game_active:
-            await ctx.send(
-                "Игра еще не началась! Используйте !startguess, чтобы начать."
-            )
-            return
-        author = ctx.author.name
-        cur_time = time.time()
-        if author not in self.players or cur_time - self.players[author] > 30:
-            self.players[author] = cur_time
-            if number == self.target_number:
-                self.game_active = False
-                self.players = {}
-                await ctx.send(
-                    f"Поздравляем, @{ctx.author.name}! Вы угадали число {self.target_number}!"
-                )
-            elif number < self.target_number:
-                await ctx.send(f"@{ctx.author.name}, ваше число слишком маленькое!")
-            else:
-                await ctx.send(f"@{ctx.author.name}, ваше число слишком большое!")
-        else:
-            await ctx.send(
-                f"@{ctx.author.name}, подождите еще {int(30 - (cur_time - self.players[author]))} секунд"
-            )
-
-    @commands.command(name="mescount")
-    async def mescount(self, ctx):
-        author = ctx.author.name
-        count = self.chat_people.get(author, 0)
-        await ctx.send(f"@{ctx.author.name}, ты отправил {count} сообщений!")
 
     async def toggle(self, message):
         number = message.content
@@ -290,7 +217,6 @@ class Bot(commands.Bot):
     async def pins(self, ctx):
         author = ctx.author.name
         await ctx.send(f"@{ctx.author.name}, (10, 12, 14, 15, 17, 18, 21, 24, 26, 13, 19, 16)")
-
 
 
 
