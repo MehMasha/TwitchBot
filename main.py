@@ -72,7 +72,7 @@ class Bot(commands.Bot):
 
         elif message.first:
             await message.channel.send(
-                f"@{message.author.name}, хэлоу! Добро пожаловать на мой стрим! Фоловься, залетай в телегу и в дискорд! <3"
+                f"@{message.author.name}, хэлоу! Добро пожаловать на мой стрим и в чат! Залетай в телегу и в дискорд! <3"
             )
 
         await self.handle_commands(message)
@@ -118,27 +118,26 @@ class Bot(commands.Bot):
 
     @commands.command(name="db", aliases=["bd", "начальник", "DB", "Db", "Bd", "BD"])
     async def db(self, ctx: commands.Context):
-        # await ctx.send("https://youtu.be/SJCaExarFiQ")
         await ctx.send(f"@{ctx.author.name}, - https://youtu.be/SJCaExarFiQ")
+
+    @commands.command(name="python", aliases=["phyton", "питон", "пайтон"])
+    async def python(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, мой гайд по питону - https://youtu.be/4z_nzaHgUhk")
 
     @commands.command(name="tg", aliases=["telegram", "TG", "Tg", "телеграмм", "телега", "тг"])
     async def tg(self, ctx: commands.Context):
-        # await ctx.send("https://t.me/mehmasha_twitch")
         await ctx.send(f"@{ctx.author.name}, Алерты и кружочки - https://t.me/MehMashaAlerts Чатик - https://t.me/mehmasha_twitch")
 
     @commands.command(name="boosty")
     async def boosty(self, ctx: commands.Context):
-        # await ctx.send("https://boosty.to/mehmasha")
         await ctx.send(f"@{ctx.author.name}, - https://boosty.to/mehmasha")
 
     @commands.command(name="discord")
     async def discord(self, ctx: commands.Context):
-        # await ctx.send("https://discord.gg/SG3qgBtAyh")
         await ctx.send(f"@{ctx.author.name}, - https://discord.gg/SG3qgBtAyh")
 
     @commands.command(name="donate", aliases=["донат", "Donate", "Донат"])
     async def donate(self, ctx: commands.Context):
-        # await ctx.send("https://www.donationalerts.com/r/mehmasha")
         await ctx.send(f"@{ctx.author.name}, - https://www.donationalerts.com/r/mehmasha")
 
     @commands.command(name="followage")
@@ -292,15 +291,12 @@ class Bot(commands.Bot):
         await ctx.send(f"@{ctx.author.name}, (10, 12, 14, 15, 17, 18, 21, 24, 26, 13, 19, 16)")
 
 
-    async def on_shutdown(self):
-        with open("data/people.json", "w") as file:
-            json.dump(self.chat_people, file)
 
 
 start_time = time.time()
 bot = Bot()
-try:
-    bot.run()
-finally:
-    bot.loop.run_until_complete(bot.on_shutdown())
-    bot.loop.close()
+while True:
+    try:
+        bot.run()
+    finally:
+        bot.loop.close()
