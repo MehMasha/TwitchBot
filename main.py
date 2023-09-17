@@ -13,7 +13,7 @@ import time
 import json
 import pymongo
 
-lang = 'en'
+lang = 'ru'
 
 if lang == 'ru':
     from text_ru import *
@@ -47,7 +47,7 @@ class Bot(commands.Bot):
 
     async def event_ready(self):
         print(f"Logged in as | {self.nick}")
-        self.hello.start()
+        # self.hello.start()
         self.hello1.start()
 
     async def event_message(self, message):
@@ -60,7 +60,7 @@ class Bot(commands.Bot):
             await self.process_reward(message)
         user = message.author
         me = await message.channel.user()
-        k = await me.fetch_followers(token)
+        # k = await me.fetch_followers(token)
 
         if "несостоявш" in message.content.lower() or "не состоявш" in message.content.lower():
             await message.channel.send(
@@ -108,27 +108,31 @@ class Bot(commands.Bot):
             except:
                 print("Заебало")
 
-    @routines.routine(minutes=10)
-    async def hello(self):
-        await asyncio.sleep(600)
-        is_live = await self.is_live()
-        if is_live:
-            try:
-                channel = self.connected_channels[0]
-                await channel.send(routine_2)
-            except:
-                print("Заебало")
+    # @routines.routine(minutes=10)
+    # async def hello(self):
+    #     await asyncio.sleep(600)
+    #     is_live = await self.is_live()
+    #     if is_live:
+    #         try:
+    #             channel = self.connected_channels[0]
+    #             await channel.send(routine_2)
+    #         except:
+    #             print("Заебало")
 
     @commands.command(name="db", aliases=["bd", "начальник", "DB", "Db", "Bd", "BD"])
     async def db(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - https://youtu.be/SJCaExarFiQ")
     @commands.command(name="огурец", aliases=["cucumber"])
     async def cucumber(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - Мой новый влог с Праздника Огурца на boosty - https://boosty.to/mehmasha/posts/97f101f5-72f5-45d0-875c-ec81d67a7445?share=post_link")
+        await ctx.send(f"@{ctx.author.name}, - Мой новый влог с Праздника Огурца - youtu.be/eHzFZWQftpA")
 
     @commands.command(name="python", aliases=["phyton", "питон", "пайтон"])
     async def python(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, {python_guide} - https://youtu.be/4z_nzaHgUhk")
+
+    @commands.command(name="шорты", aliases=["shorts"])
+    async def shorts(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, {youtube_shorts} - https://youtube.com/shorts/u8fYOWX0NgE?si=Fj62K7_5bx8ZGLlO")
 
     @commands.command(name="tg", aliases=["telegram", "TG", "Tg", "телеграмм", "телега", "тг"])
     async def tg(self, ctx: commands.Context):
@@ -171,6 +175,10 @@ class Bot(commands.Bot):
     @commands.command(name="рост", aliases=["height"])
     async def height(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - {height_msg}")
+
+    @commands.command(name="theme", aliases=["тема"])
+    async def theme(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, - synthwave 84")
 
     @commands.command(name="uptime")
     async def uptime(self, ctx: commands.Context):
