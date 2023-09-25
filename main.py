@@ -5,13 +5,11 @@ from dotenv import load_dotenv
 from twitchio.ext import commands
 from datetime import datetime
 import pymorphy2
-import aiohttp
-from loguru import logger
 from twitchio.ext import routines
 import random
 import time
 import json
-import pymongo
+
 
 lang = 'ru'
 
@@ -21,8 +19,6 @@ else:
     from text_en import *
 
 from utils import get_followage, get_commands
-
-logger.add("main_log.log", rotation="50 MB")
 
 morph = pymorphy2.MorphAnalyzer(lang="ru")
 
@@ -159,7 +155,6 @@ class Bot(commands.Bot):
         user = await ctx.author.user()
         me = await ctx.channel.user()
         k = await user.fetch_follow(me, token)
-        logger.info(f"{user.name} вызвал команду followage")
         if k:
             res_str = get_followage(k.followed_at, ctx, morph, lang)
             await ctx.send(res_str)
