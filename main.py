@@ -42,6 +42,7 @@ class Bot(commands.Bot):
         if message.echo:
             return
         print(message.author, message.author.id, message.content)
+        print(message.tags)
         # 'custom-reward-id'
         if 'custom-reward-id' in message.tags:
             await self.process_reward(message)
@@ -126,7 +127,7 @@ class Bot(commands.Bot):
     async def donate(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - https://www.donationalerts.com/r/mehmasha")
 
-    @commands.command(name="commands", aliases=['help'])
+    @commands.command(name="commands", aliases=['help', 'команды', 'помощь'])
     async def command(self, ctx: commands.Context):
         res_str = get_commands(lang)
         await ctx.send(f"@{ctx.author.name}, - {res_str}")
