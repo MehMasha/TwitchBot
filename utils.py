@@ -34,3 +34,8 @@ def get_answer(f, command, name, **kwargs):
     for com in data:
         if command in com['aliases']:
             return com['message'].format(name=name, **kwargs)
+        
+
+def get_rewards(f):
+    data = json.load(f)
+    return data

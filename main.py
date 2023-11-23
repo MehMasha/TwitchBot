@@ -38,6 +38,8 @@ class Bot(commands.Bot):
 
     async def event_message(self, message):
         if message.echo:
+            return
+        if message.author.is_broadcaster:
             if message.content == '!reload':
                 self.rewards_file = open('config.json')
                 self.commands_file = open('commands.json')
