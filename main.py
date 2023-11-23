@@ -14,7 +14,7 @@ if lang == 'ru':
 else:
     from text_en import *
 
-from utils import get_commands
+from utils import get_commands, get_answer
 
 load_dotenv()
 token = os.getenv("ACCESS_TOKEN")
@@ -41,6 +41,7 @@ class Bot(commands.Bot):
         super().__init__(token=token, prefix="!", initial_channels=["mehmasha"])
         self.game_active = False
         self.players = {}
+        self.commands_file = open('commands.json')
 
     async def event_ready(self):
         print(f"Logged in as | {self.nick}")
@@ -72,6 +73,15 @@ class Bot(commands.Bot):
             await message.channel.send(
                 f"@{message.author.name}, {msg_first}"
             )
+
+        if message.content[0] == '!':
+            command = message.content[1:]
+            answer = get_answer(self.commands_file, command, message.author.name, **vars)
+            if answer:
+                await message.channel.send(
+                    answer
+                )
+                print('new')
 
         await self.handle_commands(message)
 
@@ -128,65 +138,10 @@ class Bot(commands.Bot):
         except:
             print("Заебало")
 
-    @commands.command(name="db", aliases=["bd", "начальник", "DB", "Db", "Bd", "BD"])
-    async def db(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - https://youtu.be/SJCaExarFiQ")
-
-    @commands.command(name="огурец", aliases=["cucumber"])
-    async def cucumber(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - Мой новый влог с Праздника Огурца - youtu.be/eHzFZWQftpA")
-
-    @commands.command(name="python", aliases=["phyton", "питон", "пайтон"])
-    async def python(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, {python_guide} - https://youtu.be/4z_nzaHgUhk")
-
-    @commands.command(name="шорты", aliases=["shorts"])
-    async def shorts(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, {youtube_shorts} - https://youtube.com/shorts/u8fYOWX0NgE?si=Fj62K7_5bx8ZGLlO")
-
-    @commands.command(name="tg", aliases=["telegram", "TG", "Tg", "телеграмм", "телега", "тг"])
-    async def tg(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, {tg_msg}")
-
-    @commands.command(name="boosty")
-    async def boosty(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - https://boosty.to/mehmasha")
-
-    @commands.command(name="games")
-    async def games(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - https://pastebin.com/LKFCNkKz")
-
-    @commands.command(name="films", aliases=['фильмы', 'сериалы', 'просмотр'])
-    async def films(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - https://telegra.ph/Filmyserialy-kotorye-uzhe-smotreli-na-strime-10-25")
-
-    @commands.command(name="discord")
-    async def discord(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - https://discord.gg/SG3qgBtAyh")
-
-    @commands.command(name="donate", aliases=["донат", "Donate", "Донат"])
-    async def donate(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - https://www.donationalerts.com/r/mehmasha")
-
     @commands.command(name="commands", aliases=['help', 'команды', 'помощь'])
     async def command(self, ctx: commands.Context):
         res_str = get_commands(lang)
         await ctx.send(f"@{ctx.author.name}, - {res_str}")
-
-    @commands.command(name="рост", aliases=["height"])
-    async def height(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - {height_msg}")
-
-    @commands.command(name="theme", aliases=["тема"])
-    async def theme(self, ctx: commands.Context):
-        if ctx.author.name.lower() == 'oliv1ch':
-            await ctx.send(f"@{ctx.author.name}, - Doki Theme")
-        else:
-            await ctx.send(f"@{ctx.author.name}, - synthwave 84")
-
-    @commands.command(name="star", aliases=["product", "productstar"])
-    async def product_star(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, узнать про Product Star можно по ссылке - https://go.productstar.ru/iJHzFg")
 
     @commands.command(name="uptime")
     async def uptime(self, ctx: commands.Context):
@@ -215,10 +170,6 @@ class Bot(commands.Bot):
             await message.channel.send(f"@{author}, включаю!")
         elif response.text == 'off':
             await message.channel.send(f"@{author}, выключаю!")
-
-    @commands.command(name="pins")
-    async def pins(self, ctx):
-        await ctx.send(f"@{ctx.author.name}, (10, 12, 14, 15, 17, 18, 21, 24, 26, 13, 19, 16)")
 
 
 

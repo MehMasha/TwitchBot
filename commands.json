@@ -1,0 +1,80 @@
+[
+    {
+        "aliases": [
+            "db", "bd", "начальник", "DB", "Db", "Bd", "BD"
+        ],
+        "message": "@{name}, - https://youtu.be/SJCaExarFiQ"
+    },
+    {
+        "aliases": [
+            "огурец", "cucumber"
+        ],
+        "message": "@{name}, - Мой новый влог с Праздника Огурца - youtu.be/eHzFZWQftpA"
+    },
+    {
+        "aliases": [
+            "python", "phyton", "питон", "пайтон"
+        ],
+        "message": "@{name}, {python_guide} - https://youtu.be/4z_nzaHgUhk"
+    },
+    {
+        "aliases": [
+            "шорты", "шортс", "shorts"
+        ],
+        "message": "@{name}, {youtube_shorts} - https://youtube.com/shorts/u8fYOWX0NgE?si=Fj62K7_5bx8ZGLlO"
+    },
+    {
+        "aliases": [
+            "tg", "telegram", "TG", "Tg", "телеграмм", "телега", "тг"
+        ],
+        "message": "@{name}, {tg_msg}"
+    },
+    {
+        "aliases": [
+            "boosty"
+        ],
+        "message": "@{name}, - https://boosty.to/mehmasha"
+    },
+    {
+        "aliases": [
+            "games"
+        ],
+        "message": "@{name}, - https://pastebin.com/LKFCNkKz"
+    },
+    {
+        "aliases": [
+            "films", "фильмы", "сериалы", "просмотр"
+        ],
+        "message": "@{name}, - https://telegra.ph/Filmyserialy-kotorye-uzhe-smotreli-na-strime-10-25"
+    },
+    {
+        "aliases": [
+            "discord"
+        ],
+        "message": "@{name}, - https://discord.gg/SG3qgBtAyh"
+    },
+    {
+        "aliases": [
+            "donate", "донат", "Donate", "Донат"
+        ],
+        "message": "@{name}, - https://www.donationalerts.com/r/mehmasha"
+    },
+    {
+        "aliases": [
+            "рост", "height"
+        ],
+        "message": "@{name}, - {height_msg}"
+    },
+    {
+        "aliases": [
+            "pins"
+        ],
+        "message": "@{name}, (10, 12, 14, 15, 17, 18, 21, 24, 26, 13, 19, 16)"
+    },
+    {
+        "aliases": [
+            "theme"
+        ],
+        "message": "@{name}, - synthwave 84"
+    }
+]

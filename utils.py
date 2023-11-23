@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 
 def get_commands(lang) -> str:
@@ -26,3 +27,10 @@ def get_commands(lang) -> str:
         res_str += "!рост - to khow streamer's height, "
         res_str += "!python - my python guide, "
     return res_str
+
+
+def get_answer(f, command, name, **kwargs):
+    data = json.load(f)
+    for com in data:
+        if command in com['aliases']:
+            return com['message'].format(name=name, **kwargs)
