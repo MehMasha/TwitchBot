@@ -50,7 +50,9 @@ class Bot(commands.Bot):
 
     async def event_message(self, message):
         if message.echo:
-            return
+            if message.content == '!reload':
+                self.commands_file = open('commands.json')
+
         print(message.author, message.author.id, message.content)
         # print(message.tags)
         if 'custom-reward-id' in message.tags:
