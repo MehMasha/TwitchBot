@@ -26,6 +26,14 @@ headers = {
     "Content-Type": "application/json",
 }
 ban_words = ["tits", "tittie", "сиськи", "siski", " sisi", "titts", "титьки", "буферa"]
+ban_words = []
+
+pointauc_token = os.getenv('POINTAUC_TOKEN')
+pointauc_url = 'https://pointauc.com/api/oshino/bids'
+
+pointauc_headers = {
+    'Authorization': f'Bearer {pointauc_token}'
+}
 
 
 class Bot(commands.Bot):
@@ -37,13 +45,13 @@ class Bot(commands.Bot):
     async def event_ready(self):
         print(f"Logged in as | {self.nick}")
         self.hello1.start()
+        # self.hello2.start()
 
     async def event_message(self, message):
         if message.echo:
             return
         print(message.author, message.author.id, message.content)
-        print(message.tags)
-        # 'custom-reward-id'
+        # print(message.tags)
         if 'custom-reward-id' in message.tags:
             await self.process_reward(message)
         user = message.author
@@ -68,7 +76,36 @@ class Bot(commands.Bot):
         await self.handle_commands(message)
 
     async def process_reward(self, message):
-        print(message.author.name)
+        # print(message.author.name)
+        # print(message.tags['custom-reward-id'])
+
+        auction_rewards = [
+            '1c074f9a-9847-4cee-8754-041937b345df',
+            '1e14b198-bf0c-401a-8feb-bcd92db02ae6',
+            '6fba6e53-9250-41a5-ac15-946d3724f478'
+        ]
+        if message.tags['custom-reward-id'] in auction_rewards:
+            auc_data = {
+              "bids": [
+                {
+                  "cost": 10,
+                  "username": message.tags.get('display-name'),
+                  "message": message.content,
+                  "color": message.tags.get('color', '#005500').lower(),
+                  "isDonation": False,
+                }
+              ]
+            }
+            requests.post(
+                pointauc_url,
+                json=auc_data,
+                headers=pointauc_headers
+            )
+            print(auc_data)
+            return
+        # 1c074f9a-9847-4cee-8754-041937b345df - аук1
+        # 1e14b198-bf0c-401a-8feb-bcd92db02ae6 - аук2
+        # 6fba6e53-9250-41a5-ac15-946d3724f478 - аук3
 
         if message.tags['custom-reward-id'] == '22c8705a-7858-4f30-b10e-f64dd9a89e60':
             await self.toggle(message)
@@ -119,6 +156,10 @@ class Bot(commands.Bot):
     async def games(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - https://pastebin.com/LKFCNkKz")
 
+    @commands.command(name="films", aliases=['фильмы', 'сериалы', 'просмотр'])
+    async def films(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, - https://telegra.ph/Filmyserialy-kotorye-uzhe-smotreli-na-strime-10-25")
+
     @commands.command(name="discord")
     async def discord(self, ctx: commands.Context):
         await ctx.send(f"@{ctx.author.name}, - https://discord.gg/SG3qgBtAyh")
@@ -138,7 +179,14 @@ class Bot(commands.Bot):
 
     @commands.command(name="theme", aliases=["тема"])
     async def theme(self, ctx: commands.Context):
-        await ctx.send(f"@{ctx.author.name}, - synthwave 84")
+        if ctx.author.name.lower() == 'oliv1ch':
+            await ctx.send(f"@{ctx.author.name}, - Doki Theme")
+        else:
+            await ctx.send(f"@{ctx.author.name}, - synthwave 84")
+
+    @commands.command(name="star", aliases=["product", "productstar"])
+    async def product_star(self, ctx: commands.Context):
+        await ctx.send(f"@{ctx.author.name}, узнать про Product Star можно по ссылке - https://go.productstar.ru/iJHzFg")
 
     @commands.command(name="uptime")
     async def uptime(self, ctx: commands.Context):

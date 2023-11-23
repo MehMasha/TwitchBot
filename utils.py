@@ -12,6 +12,7 @@ def get_commands(lang) -> str:
         res_str += "!рост - узнать рост стримера, "
         res_str += "!python - мой гайд Python, "
         res_str += "!games - список игр, которые у меня есть, "
+        res_str += "!films - список фильмов, которые смотрели, "
         res_str += '!огурец - мой влог с праздника огурца, '
         res_str += '!uptime - сколько работает бот'
     else:
