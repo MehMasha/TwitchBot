@@ -14,23 +14,13 @@ if lang == 'ru':
 else:
     from text_en import *
 
-from utils import get_commands, get_answer
+from utils import get_commands, get_answer, get_rewards
 
 load_dotenv()
 token = os.getenv("ACCESS_TOKEN")
-client_id = os.getenv("CLIENT_ID")
-channel_id = 633244077
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Client-Id": client_id,
-    "Content-Type": "application/json",
-}
-ban_words = ["tits", "tittie", "сиськи", "siski", " sisi", "titts", "титьки", "буферa"]
-ban_words = []
 
 pointauc_token = os.getenv('POINTAUC_TOKEN')
 pointauc_url = 'https://pointauc.com/api/oshino/bids'
-
 pointauc_headers = {
     'Authorization': f'Bearer {pointauc_token}'
 }
@@ -39,18 +29,17 @@ pointauc_headers = {
 class Bot(commands.Bot):
     def __init__(self):
         super().__init__(token=token, prefix="!", initial_channels=["mehmasha"])
-        self.game_active = False
-        self.players = {}
         self.commands_file = open('commands.json')
+        self.rewards_file = open('config.json')
 
     async def event_ready(self):
         print(f"Logged in as | {self.nick}")
         self.hello1.start()
-        # self.hello2.start()
 
     async def event_message(self, message):
         if message.echo:
             if message.content == '!reload':
+                self.rewards_file = open('config.json')
                 self.commands_file = open('commands.json')
 
         print(message.author, message.author.id, message.content)
@@ -60,18 +49,7 @@ class Bot(commands.Bot):
         user = message.author
         me = await message.channel.user()
 
-        if "несостоявш" in message.content.lower() or "не состоявш" in message.content.lower():
-            await message.channel.send(
-                f"Привет, @{message.author.name}! Если ты хочешь узнать подробную историю про мои страдания на работах в IT, то воспользуйся командой !db"
-            )
-        elif any(word in message.content.lower() for word in ban_words):
-            if not (
-                user.is_broadcaster or user.is_mod or user.is_vip or user.is_subscriber
-            ):
-                await message.channel.send(f"@{message.author.name}, чел, ты.....")
-                await me.timeout_user(token, channel_id, user.id, 15, "чел, ты...")
-
-        elif message.first:
+        if message.first:
             await message.channel.send(
                 f"@{message.author.name}, {msg_first}"
             )
@@ -88,15 +66,9 @@ class Bot(commands.Bot):
         await self.handle_commands(message)
 
     async def process_reward(self, message):
-        # print(message.author.name)
         # print(message.tags['custom-reward-id'])
-
-        auction_rewards = [
-            '1c074f9a-9847-4cee-8754-041937b345df',
-            '1e14b198-bf0c-401a-8feb-bcd92db02ae6',
-            '6fba6e53-9250-41a5-ac15-946d3724f478'
-        ]
-        if message.tags['custom-reward-id'] in auction_rewards:
+        rewards = get_rewards(self.rewards_file)
+        if message.tags['custom-reward-id'] in rewards['auction_rewards']:
             auc_data = {
               "bids": [
                 {
@@ -108,21 +80,11 @@ class Bot(commands.Bot):
                 }
               ]
             }
-            requests.post(
-                pointauc_url,
-                json=auc_data,
-                headers=pointauc_headers
-            )
+            requests.post(pointauc_url, json=auc_data, headers=pointauc_headers)
             print(auc_data)
-            return
-        # 1c074f9a-9847-4cee-8754-041937b345df - аук1
-        # 1e14b198-bf0c-401a-8feb-bcd92db02ae6 - аук2
-        # 6fba6e53-9250-41a5-ac15-946d3724f478 - аук3
 
         if message.tags['custom-reward-id'] == '22c8705a-7858-4f30-b10e-f64dd9a89e60':
             await self.toggle(message)
-        if message.tags['custom-reward-id'] == '10ef79b1-1d69-41d6-97d2-09e641aa4357':
-            await self.color(message)
 
     async def is_live(self):
         result = await self.fetch_streams(user_logins=["mehmasha"])
